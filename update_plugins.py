@@ -16,7 +16,6 @@ from os import path
 
 #--- Globals ----------------------------------------------
 PLUGINS = """
-auto-pairs https://github.com/jiangmiao/auto-pairs
 ale https://github.com/w0rp/ale
 vim-yankstack https://github.com/maxbrunsfeld/vim-yankstack
 ack.vim https://github.com/mileszs/ack.vim
@@ -56,7 +55,6 @@ lightline-ale https://github.com/maximbaz/lightline-ale
 vim-abolish https://github.com/tpope/tpope-vim-abolish
 mru.vim https://github.com/vim-scripts/mru.vim
 vim-markdown https://github.com/plasticboy/vim-markdown
-comfortable-motion.vim https://github.com/yuttie/comfortable-motion.vim
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

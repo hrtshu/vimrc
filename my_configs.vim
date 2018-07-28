@@ -11,3 +11,6 @@ set formatoptions+=mM
 
 set secure
 set exrc
+
+nnoremap <F5> :w<CR>:Dispatch<CR>
+inoremap <F5> <Esc>:w<CR>:Dispatch<CR>

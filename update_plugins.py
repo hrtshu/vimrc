@@ -56,6 +56,8 @@ vim-abolish https://github.com/tpope/tpope-vim-abolish
 mru.vim https://github.com/vim-scripts/mru.vim
 vim-markdown https://github.com/plasticboy/vim-markdown
 vim-dispatch https://github.com/tpope/vim-dispatch
+vim-pandoc https://github.com/vim-pandoc/vim-pandoc
+vim-pandoc-syntax https://github.com/vim-pandoc/vim-pandoc-syntax
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

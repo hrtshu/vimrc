@@ -58,6 +58,7 @@ vim-markdown https://github.com/plasticboy/vim-markdown
 vim-dispatch https://github.com/tpope/vim-dispatch
 vim-pandoc https://github.com/vim-pandoc/vim-pandoc
 vim-pandoc-syntax https://github.com/vim-pandoc/vim-pandoc-syntax
+vim-renamer https://github.com/qpkorr/vim-renamer
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

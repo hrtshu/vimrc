@@ -59,6 +59,7 @@ vim-dispatch https://github.com/tpope/vim-dispatch
 vim-pandoc https://github.com/vim-pandoc/vim-pandoc
 vim-pandoc-syntax https://github.com/vim-pandoc/vim-pandoc-syntax
 vim-renamer https://github.com/qpkorr/vim-renamer
+rainbow https://github.com/luochen1990/rainbow
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

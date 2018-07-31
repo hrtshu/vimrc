@@ -16,3 +16,5 @@ set modeline
 
 nnoremap <F5> :w<CR>:Dispatch!<CR>
 inoremap <F5> <Esc>:w<CR>:Dispatch!<CR>
+
+let g:rainbow_active = 1

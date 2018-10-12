@@ -61,6 +61,7 @@ vim-pandoc-syntax https://github.com/vim-pandoc/vim-pandoc-syntax
 vim-renamer https://github.com/qpkorr/vim-renamer
 rainbow https://github.com/luochen1990/rainbow
 jedi-vim https://github.com/davidhalter/jedi-vim
+vim-vue https://github.com/posva/vim-vue
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

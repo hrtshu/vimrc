@@ -26,3 +26,17 @@ inoremap <F5> <Esc>:w<CR>:Dispatch!<CR>
 
 " 括弧を色分けしてくれるプラグインを有効化
 let g:rainbow_active = 1
+
+" ファイルタイプごとにスペース幅を指定
+" 参考: https://qiita.com/ymiyamae/items/06d0f5ce9c55e7369e1f
+" 参考: https://qiita.com/mitsuru793/items/2d464f30bd091f5d0fef
+if has("autocmd")
+  filetype plugin on
+  filetype indent on
+  augroup fileTypeIndent
+    autocmd!
+    autocmd FileType html           setlocal sw=2 sts=2 ts=2 et
+    autocmd FileType javascript     setlocal sw=2 sts=2 ts=2 et
+    autocmd FileType vue            setlocal sw=2 sts=2 ts=2 et
+  augroup END
+endif

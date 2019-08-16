@@ -42,6 +42,10 @@ function! pandoc#folding#Init()
     if !exists('g:pandoc#folding#use_foldtext')
         let g:pandoc#folding#use_foldtext = 1
     endif
+    " Use fastfolds? {{{3
+    if !exists('g:pandoc#folding#fastfolds')
+        let g:pandoc#folding#fastfolds = 0
+    endif
     " Use basic folding fot this buffer? {{{3
     if !exists("b:pandoc_folding_basic")
         let b:pandoc_folding_basic = 0
@@ -51,11 +55,13 @@ function! pandoc#folding#Init()
     exe "setlocal foldlevel=".g:pandoc#folding#level
     setlocal foldmethod=expr
     " might help with slowness while typing due to syntax checks
-    augroup EnableFastFolds
-        au!
-        autocmd InsertEnter <buffer> setlocal foldmethod=manual
-        autocmd InsertLeave <buffer> setlocal foldmethod=expr
-    augroup end
+    if g:pandoc#folding#fastfolds
+        augroup EnableFastFolds
+            au!
+            autocmd InsertEnter <buffer> setlocal foldmethod=manual
+            autocmd InsertLeave <buffer> setlocal foldmethod=expr
+        augroup end
+    endif
     setlocal foldexpr=pandoc#folding#FoldExpr()
     if g:pandoc#folding#use_foldtext
         setlocal foldtext=pandoc#folding#FoldText()
@@ -73,8 +79,10 @@ function! pandoc#folding#Disable()
     setlocal foldcolumn&
     setlocal foldlevel&
     setlocal foldexpr&
-    au! InsertEnter
-    au! InsertLeave
+    if g:pandoc#folding#fastfolds
+        au! InsertEnter
+        au! InsertLeave
+    endif
     if exists(':PandocFolding')
         delcommand PandocFolding
     endif
@@ -101,9 +109,12 @@ endfunction
 function! pandoc#folding#FoldExpr()
     " with multiple splits in the same buffer, the folding code can be called
     " way too many times too often, so it's best to disable it to keep good
-    " performance.
-    if count(map(range(1, winnr('$')), 'bufname(winbufnr(v:val))'), bufname("")) > 1
-        return
+    " performance. Only enable when using the built-in method of improving
+    " performance of folds.
+    if g:pandoc#folding#fastfolds == 1
+        if count(map(range(1, winnr('$')), 'bufname(winbufnr(v:val))'), bufname("")) > 1
+            return
+        endif
     endif
 
     let vline = getline(v:lnum)

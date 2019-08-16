@@ -13,12 +13,14 @@ mind.
 
 ## Installation
 
-If you don't have a preferred installation method, I recommend
-installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
-then simply copy and paste:
+Install using your favorite package manager, or use Vim's built-in package
+support:
 
-    cd ~/.vim/bundle
-    git clone git://github.com/tpope/vim-dispatch.git
+    mkdir -p ~/.vim/pack/tpope/start
+    cd ~/.vim/pack/tpope/start
+    git clone https://tpope.io/vim/dispatch.git
+    vim -u NONE -c "helptags dispatch/doc" -c q
+
 
 ## Usage
 
@@ -95,9 +97,8 @@ can set it interactively, or in an autocommand:
 
 If no `b:dispatch` is found, it falls back to `:Make`.
 
-`:Dispatch` makes a great map:
-
-    nnoremap <F9> :Dispatch<CR>
+`:Dispatch` makes a great map.  By default dispatch.vim provides `` `<CR>`` for
+`:Dispatch<CR>`.  You can find all default maps under `:h dispatch-maps`.
 
 ### Focusing
 

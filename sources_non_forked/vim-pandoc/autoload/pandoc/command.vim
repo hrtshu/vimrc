@@ -7,7 +7,11 @@ function! pandoc#command#Init()
     " set up defaults {{{2
     " use message buffers? {{{3
     if !exists("g:pandoc#command#use_message_buffers")
-        let g:pandoc#command#use_message_buffers = 1
+        if has("nvim") == 1
+            let g:pandoc#command#use_message_buffers = 0
+        else
+            let g:pandoc#command#use_message_buffers = 1
+        endif
     endif
 
     " LaTeX engine to use to produce PDFs with pandoc (xelatex, pdflatex, lualatex) {{{3
@@ -60,7 +64,7 @@ function! pandoc#command#Init()
                     \ Pandoc call pandoc#command#Pandoc("<args>", "<bang>")
     else
         " simple version for systems without python
-        command! -buffer -nargs=? Pandoc call pandoc#command#PandocNative("<args>")
+        command! -buffer -bang -nargs=? Pandoc call pandoc#command#PandocNative("<args>", "<bang>")
     endif "}}}2
     " create :PandocTemplate {{{2
     command! -buffer -nargs=1 -complete=custom,pandoc#command#PandocTemplateComplete
@@ -78,19 +82,34 @@ endfunction
 function! pandoc#command#Pandoc(args, bang)
     if has("python3") || has("python3/dyn")
         py3 from vim_pandoc.command import pandoc
-        let templatized_args = substitute(a:args, '#\(\S\+\)',
-                    \'\=pandoc#command#GetTemplate(submatch(1))', 'g')
-        py3 pandoc(vim.eval('templatized_args'), vim.eval('a:bang') != '')
+        let l:expanded_args = s:ExpandArgs(a:args)
+        py3 pandoc(vim.eval('l:expanded_args'), vim.eval('a:bang') != '')
     endif
 endfunction
 
-function! pandoc#command#PandocNative(args)
-    let l:cmd = g:pandoc#compiler#command.' '.g:pandoc#compiler#arguments.' '.a:args.' '.fnameescape(expand('%'))
+function! pandoc#command#PandocNative(args, bang)
+    let l:cmd = g:pandoc#compiler#command.' '.g:pandoc#compiler#arguments.' '.s:ExpandArgs(a:args).' '.fnameescape(expand('%'))
     if has('job')
-        call job_start(l:cmd)
+        if a:bang == "!"
+            call job_start(l:cmd, {'exit_cb':'pandoc#command#ExitHandler'})
+        else
+            call job_start(l:cmd)
+        endif
     else
         call system(l:cmd)
+        if a:bang == "!"
+            let l:output_filepath = s:ExtractOutputFilepath(split(s:ExpandArgs(a:args)))
+            call s:LaunchFile(l:output_filepath)
+        endif
     endif
+endfunction
+
+function! s:ExpandArgs(args)
+    let expanded_args = substitute(a:args, '%\(:[phtre]\)\+',
+                \'\=expand(submatch(0))', 'g') " expand placeholders
+    let templatized_args = substitute(expanded_args, '#\(\S\+\)',
+                \'\=pandoc#command#GetTemplate(submatch(1))', 'g') " expand templates
+    return eval('templatized_args')
 endfunction
 
 " PandocComplete(a, c, pos): the Pandoc command argument completion func, requires python support {{{2
@@ -140,6 +159,46 @@ function! pandoc#command#JobHandler(id, data, event) dict
     else
         py3 from vim_pandoc.command import pandoc
         py3 pandoc.on_done(vim.eval('self.should_open') == '1', vim.eval('a:data'))
+    endif
+endfunction
+
+" Functions for launching file without python {{{2
+function! s:ExtractOutputFilepath(lst_command) " {{{3
+    let output_parameter_position = index(a:lst_command, '-o')
+    if (output_parameter_position + 1 < len(a:lst_command))
+        return a:lst_command[output_parameter_position + 1]
+    else
+        return ""
+    endif
+endfunction
+
+function! s:LaunchFile(filepath) " {{{3 http://www.dwheeler.com/essays/open-files-urls.html
+    let open_command = ''
+    if (has('win32') || has('win64')) && executable('cmd')
+        let open_command = 'cmd /c start'
+    elseif (has('macunix') || has('unix')) && executable('open')
+        let open_command = 'open'
+    elseif has('unix') && executable('xdg-open')
+        let open_command = 'xdg-open'
+    elseif has('win32unix') && executable('cygstart')
+        let open_command = 'cygstart'
+    endif
+    if strlen(open_command) && strlen(a:filepath)
+        execute '!' . open_command . ' ' . a:filepath
+    endif
+endfunction
+
+function! pandoc#command#ExitHandler(job, status) " {{{3
+    if a:status == 0 "if exit status shows success
+        " don't run if platform is windows and doesn't have patch 8.1.0464 because
+        " if there were backslashes in the command (e.g. output to subdirectory),
+        " the cmd property will be missing them
+        " https://github.com/vim/vim/commit/1df2fa47b49dae568af6048b1dce1edbf4eee7e7
+        if !((has('win32')||has('win64')) && !(has('patch-8-1-0464')))
+            let job_cmd = job_info(a:job).cmd
+            let output_filepath = s:ExtractOutputFilepath(job_cmd)
+            call s:LaunchFile(output_filepath)
+        endif
     endif
 endfunction
 

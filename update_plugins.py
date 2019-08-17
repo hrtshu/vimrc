@@ -63,6 +63,7 @@ rainbow https://github.com/luochen1990/rainbow
 jedi-vim https://github.com/davidhalter/jedi-vim
 vim-vue https://github.com/posva/vim-vue
 MatchTagAlways https://github.com/Valloric/MatchTagAlways
+vim-searchindex https://github.com/google/vim-searchindex
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

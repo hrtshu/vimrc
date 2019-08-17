@@ -40,3 +40,12 @@ if has("autocmd")
     autocmd FileType vue            setlocal sw=2 sts=2 ts=2 et
   augroup END
 endif
+
+" MatchTagAlwaysプラグインをVueファイルでも使えるようにする
+let g:mta_filetypes = {
+  \ 'html' : 1,
+  \ 'xhtml' : 1,
+  \ 'xml' : 1,
+  \ 'jinja' : 1,
+  \ 'vue' : 1,
+  \}

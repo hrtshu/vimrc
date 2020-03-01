@@ -67,3 +67,13 @@ vnoremap <Leader>g y:TigGrep<Space><C-R>"<CR>
 nnoremap <Leader>cg :<C-u>:TigGrep<Space><C-R><C-W><CR>
 " open tig blame with current file
 nnoremap <Leader>b :TigBlame<CR>
+
+" JSファイルがeslintされるようにする
+" 参考: https://qiita.com/yuki_ycino/items/62dcc63ae70edb663c80
+let g:ale_linters = {
+  \ 'html': [],
+  \ 'css': ['stylelint'],
+  \ 'javascript': ['eslint'],
+  \ 'vue': ['eslint']
+  \ }
+let g:ale_linter_aliases = {'vue': 'css'}

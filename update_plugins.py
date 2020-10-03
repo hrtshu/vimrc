@@ -65,6 +65,7 @@ vim-vue https://github.com/posva/vim-vue
 MatchTagAlways https://github.com/Valloric/MatchTagAlways
 vim-searchindex https://github.com/google/vim-searchindex
 tig-explorer.vim https://github.com/iberianpig/tig-explorer.vim
+CamelCaseMotion https://github.com/bkad/CamelCaseMotion
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

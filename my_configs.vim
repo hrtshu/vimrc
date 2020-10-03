@@ -35,10 +35,12 @@ if has("autocmd")
   filetype indent on
   augroup fileTypeIndent
     autocmd!
-    autocmd FileType html           setlocal sw=2 sts=2 ts=2 et
-    autocmd FileType javascript     setlocal sw=2 sts=2 ts=2 et
-    autocmd FileType vue            setlocal sw=2 sts=2 ts=2 et
-    autocmd FileType json           setlocal sw=2 sts=2 ts=2 et
+    autocmd FileType html            setlocal sw=2 sts=2 ts=2 et
+    autocmd FileType javascript      setlocal sw=2 sts=2 ts=2 et
+    autocmd BufNewFile,BufRead *.ts  setlocal sw=2 sts=2 ts=2 et
+    autocmd BufNewFile,BufRead *.tsx setlocal sw=2 sts=2 ts=2 et
+    autocmd FileType vue             setlocal sw=2 sts=2 ts=2 et
+    autocmd FileType json            setlocal sw=2 sts=2 ts=2 et
   augroup END
 endif
 
@@ -74,6 +76,10 @@ let g:ale_linters = {
   \ 'html': [],
   \ 'css': ['stylelint'],
   \ 'javascript': ['eslint'],
+  \ 'typescript': ['tslint', 'tsserver'],
   \ 'vue': ['eslint']
   \ }
 let g:ale_linter_aliases = {'vue': 'css'}
+
+" キャメル単位で移動できるようにする
+let g:camelcasemotion_key = '<leader>'
